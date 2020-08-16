@@ -35,15 +35,15 @@
                 START NEW GAME
             </button>
             <template v-if="gameState === 'playing'">
-                <button id="atk-btn" @click="playerAct('attack')">ATTACK</button>
-                <button id="s-atk-btn" @click="playerAct('specialAttack')">SPECIAL ATTACK</button>
-                <button id="heal-btn" @click="playerAct('heal')">HEAL</button>
-                <button id="givUp-btn" @click="gameState = 'newgame'">GIVE UP</button>
+                <button id="atk-btn" :disabled="disableOptions" @click="playerAct('attack')">ATTACK</button>
+                <button id="s-atk-btn" :disabled="disableOptions" @click="playerAct('specialAttack')">SPECIAL ATTACK</button>
+                <button id="heal-btn" :disabled="disableOptions" @click="playerAct('heal')">HEAL</button>
+                <button id="givUp-btn" :disabled="disableOptions" @click="gameState = 'newgame'">GIVE UP</button>
             </template>
         </div>
 
-        <div class="block" v-if="gameState === 'lost'">YOU LOST :(</div>
-        <div class="block" v-if="gameState === 'won'">YOU WON!</div>
+        <div class="block" v-if="gameState === 'lost'"><strong>YOU LOST :(</strong></div>
+        <div class="block" v-if="gameState === 'won'"><strong>YOU WON!</strong></div>
 
         <div id="battle-log" class="block" v-show="gameState === 'playing' && battleLog.length">
             <template v-for="log in battleLog">

@@ -11,7 +11,8 @@ new Vue({
     player: { maxHp: 100, hp: 100 },
     monster: { maxHp: 100, hp: 100 },
     battleLog: [],
-    gameState: 'newgame' /* 'playing' | 'won' | 'lost' */
+    gameState: 'newgame' /* 'playing' | 'won' | 'lost' */,
+    disableOptions: false
   },
   methods: {
     playerAct: function (action) {
@@ -29,8 +30,12 @@ new Vue({
       if (this.monster.hp <= 0) {
         this.gameState = 'won';
       } else {
-        // setTimeout(this.monsterAttack, 500);
-        this.monsterAttack();
+        this.disableOptions = true;
+        setTimeout(() => {
+          this.monsterAttack();
+          this.disableOptions = false;
+        }, 500);
+        // this.monsterAttack();
         if (this.player.hp <= 0) gameState = 'lost';
       }
     },
