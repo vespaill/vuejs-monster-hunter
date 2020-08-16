@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+
+#combatants {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+#combatants > * {
+  width: 49%;
+  display: inline-block;
+  text-align: center;
+}
+
+#hp {
+  background-color: green;
+  height: 20px;
+  text-align: center;
+  transition: width 0.2s;
+}
+
+#hp-value {
+  color: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#hp-container {
+  position: relative;
+  overflow: hidden;
+  margin: auto;
+  width: 200px;
+  background-color: #e0dbc7;
+  border: 1px solid #000;
+  border-radius: 5px;
+}
+
+#player-options {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.block {
+  margin: auto;
+  padding: 10px 50px;
+  width: 500px;
+  box-shadow: 2.5px 2.5px 10px gray;
+  text-align: center;
+  border-radius: 5px;
+}
+
+#battle-log {
+  max-height: 300px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.battle-log__msg {
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.red {
+  color: red;
+  font-weight: bold;
+  background-color: #e6b8b8;
+}
+
+.blue {
+  color: #0275d8;
+  font-weight: bold;
+  background-color: #aedbf7;
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monster Hunter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <div id="combatants">
+            <div id="player">
+                <h1>YOU</h1>
+                <div id="hp-container">
+                    <div id="hp-value">{{ player.hp }}</div>
+                    <div id="hp" :style="{width: player.hp * 2 + 'px'}"></div>
+                </div>
+            </div>
+
+            <div id="monster">
+                <h1>MONSTER</h1>
+                <div id="hp-container">
+                    <div id="hp-value">{{ monster.hp }}</div>
+                    <div id="hp" :style="{width: monster.hp * 2 + 'px'}"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="player-options" class="block">
+            <button
+                id="start-game"
+                v-if="gameState !== 'playing'"
+                @click="reset"
+            >
+                START NEW GAME
+            </button>
+            <template v-if="gameState === 'playing'">
+                <button id="atk-btn" @click="playerAct('attack')">ATTACK</button>
+                <button id="s-atk-btn" @click="playerAct('specialAttack')">SPECIAL ATTACK</button>
+                <button id="heal-btn" @click="playerAct('heal')">HEAL</button>
+                <button id="givUp-btn" @click="gameState = 'newgame'">GIVE UP</button>
+            </template>
+        </div>
+
+        <div class="block" v-if="gameState === 'lost'">YOU LOST :(</div>
+        <div class="block" v-if="gameState === 'won'">YOU WON!</div>
+
+        <div id="battle-log" class="block" v-show="gameState === 'playing' && battleLog.length">
+            <template v-for="log in battleLog">
+                <div
+                    class="battle-log__msg"
+                    :class="{red: log.subject === 'monster', blue: log.subject === 'player'}"
+                >
+                    {{ log.msg }}
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
