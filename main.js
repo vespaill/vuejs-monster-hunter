@@ -14,34 +14,30 @@ new Vue({
       this.monster.hp = this.monster.maxHp;
       this.turns = [];
     },
-    playerAct: function (action) {
-      // PLAYER'S TURN
+    startTurn: function (action) {
+      // PLAYER TURN
       if (action === 'attack') this.attack(1, 10);
       else if (action === 'specialAttack') this.attack(10, 20);
       else if (action === 'heal') this.heal(5, 15);
+      this.disableOptions = true;
 
-      var vm = this;
-      // CHECK WIN STATE
+      // CHECK WIN
       if (this.monster.hp <= 0) {
-        setTimeout(function () {
-          vm.gameIsRunning = false;
-          alert('You won!');
-        }, 500);
-      } else {
-        this.disableOptions = true;
-        // MONSTER'S TURN
-        setTimeout(function () {
-          vm.monsterAttack(5, 15);
-          vm.disableOptions = false;
-          // CHECK LOST STATE
-          if (vm.player.hp <= 0) {
-            setTimeout(function () {
-              vm.gameIsRunning = false;
-              alert('You lost :(');
-            }, 500);
-          }
-        }, 500);
+        setTimeout(this.stopGame, 500, 'You won!');
+        return;
       }
+      // MONSTER TURN
+      setTimeout(function (scope) {
+        scope.monsterAttack(5, 15);
+        // CHECK LOST
+        if (scope.player.hp <= 0) setTimeout(scope.stopGame, 500, 'You lost :(');
+        else scope.disableOptions = false;
+      }, 500, this);
+    },
+    stopGame: function (msg) {
+      this.gameIsRunning = false;
+      this.disableOptions = false;
+      alert(msg);
     },
     attack: function (min, max) {
       var damage = this.getRndInteger(min, max);

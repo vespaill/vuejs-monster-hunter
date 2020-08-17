@@ -30,9 +30,9 @@
                 START NEW GAME
             </button>
             <template v-if="gameIsRunning">
-                <button id="atk-btn" :disabled="disableOptions" @click="playerAct('attack')">ATTACK</button>
-                <button id="s-atk-btn" :disabled="disableOptions" @click="playerAct('specialAttack')">SPECIAL ATTACK</button>
-                <button id="heal-btn" :disabled="disableOptions" @click="playerAct('heal')">HEAL</button>
+                <button id="atk-btn" :disabled="disableOptions" @click="startTurn('attack')">ATTACK</button>
+                <button id="s-atk-btn" :disabled="disableOptions" @click="startTurn('specialAttack')">SPECIAL ATTACK</button>
+                <button id="heal-btn" :disabled="disableOptions" @click="startTurn('heal')">HEAL</button>
                 <button id="givUp-btn" :disabled="disableOptions" @click="giveUp">GIVE UP</button>
             </template>
         </section>
