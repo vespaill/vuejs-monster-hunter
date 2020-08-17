@@ -62,17 +62,17 @@
   border-radius: 5px;
 }
 
-#battle-log {
+#turns-log {
   max-height: 300px;
   overflow-y: scroll;
   overflow-x: hidden;
 }
 
-#battle-log::-webkit-scrollbar {
+#turns-log::-webkit-scrollbar {
   display: none;
 }
 
-.battle-log__msg {
+.turns-log__text {
   text-align: center;
   margin-bottom: 5px;
 }

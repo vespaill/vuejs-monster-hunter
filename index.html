@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monster Hunter</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="app">
-        <div id="combatants">
+        <section id="combatants">
             <div id="player">
                 <h1>YOU</h1>
                 <div id="hp-container">
                     <div id="hp-value">{{ player.hp }}</div>
-                    <div id="hp" :style="{width: player.hp * 2 + 'px'}"></div>
+                    <div id="hp" :style="{width: player.hp + '%'}"></div>
                 </div>
             </div>
 
@@ -21,43 +20,32 @@
                 <h1>MONSTER</h1>
                 <div id="hp-container">
                     <div id="hp-value">{{ monster.hp }}</div>
-                    <div id="hp" :style="{width: monster.hp * 2 + 'px'}"></div>
+                    <div id="hp" :style="{width: monster.hp + '%'}"></div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div id="player-options" class="block">
-            <button
-                id="start-game"
-                v-if="gameState !== 'playing'"
-                @click="reset"
-            >
+        <section id="player-options" class="block">
+            <button id="start-game" v-if="!gameIsRunning" @click="startGame">
                 START NEW GAME
             </button>
-            <template v-if="gameState === 'playing'">
+            <template v-if="gameIsRunning">
                 <button id="atk-btn" :disabled="disableOptions" @click="playerAct('attack')">ATTACK</button>
                 <button id="s-atk-btn" :disabled="disableOptions" @click="playerAct('specialAttack')">SPECIAL ATTACK</button>
                 <button id="heal-btn" :disabled="disableOptions" @click="playerAct('heal')">HEAL</button>
-                <button id="givUp-btn" :disabled="disableOptions" @click="gameState = 'newgame'">GIVE UP</button>
+                <button id="givUp-btn" :disabled="disableOptions" @click="giveUp">GIVE UP</button>
             </template>
-        </div>
+        </section>
 
-        <div class="block" v-if="gameState === 'lost'"><strong>YOU LOST :(</strong></div>
-        <div class="block" v-if="gameState === 'won'"><strong>YOU WON!</strong></div>
-
-        <div id="battle-log" class="block" v-show="gameState === 'playing' && battleLog.length">
-            <template v-for="log in battleLog">
-                <div
-                    class="battle-log__msg"
-                    :class="{red: log.subject === 'monster', blue: log.subject === 'player'}"
-                >
-                    {{ log.msg }}
+        <section id="turns-log" class="block" v-if="gameIsRunning && turns.length > 0">
+            <template v-for="turn in turns">
+                <div class="turns-log__text" :class="{blue: turn.isPlayer, red: !turn.isPlayer}">
+                    {{ turn.text }}
                 </div>
             </template>
-        </div>
+        </section>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="main.js"></script>
 </body>
 </html>

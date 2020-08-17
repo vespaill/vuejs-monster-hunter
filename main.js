@@ -1,88 +1,83 @@
-/**
- * Returns a random number between min and max (both included).
- * @param {Number} min
- * @param {Number} max
- */
-const getRndInteger = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
 new Vue({
   el: '#app',
   data: {
     player: { maxHp: 100, hp: 100 },
     monster: { maxHp: 100, hp: 100 },
-    battleLog: [],
-    gameState: 'newgame' /* 'playing' | 'won' | 'lost' */,
+    gameIsRunning: false,
+    turns: [],
     disableOptions: false
   },
   methods: {
+    startGame: function () {
+      this.gameIsRunning = true;
+      this.player.hp = this.player.maxHp;
+      this.monster.hp = this.monster.maxHp;
+      this.turns = [];
+    },
     playerAct: function (action) {
-      switch (action) {
-        case 'attack':
-          this.attack();
-          break;
-        case 'specialAttack':
-          this.attack(10, 20);
-          break;
-        case 'heal':
-          this.heal();
-          break;
-      }
+      // PLAYER'S TURN
+      if (action === 'attack') this.attack(1, 10);
+      else if (action === 'specialAttack') this.attack(10, 20);
+      else if (action === 'heal') this.heal(5, 15);
+
+      var vm = this;
+      // CHECK WIN STATE
       if (this.monster.hp <= 0) {
-        this.gameState = 'won';
+        setTimeout(function () {
+          vm.gameIsRunning = false;
+          alert('You won!');
+        }, 500);
       } else {
         this.disableOptions = true;
-        setTimeout(() => {
-          this.monsterAttack();
-          this.disableOptions = false;
+        // MONSTER'S TURN
+        setTimeout(function () {
+          vm.monsterAttack(5, 15);
+          vm.disableOptions = false;
+          // CHECK LOST STATE
+          if (vm.player.hp <= 0) {
+            setTimeout(function () {
+              vm.gameIsRunning = false;
+              alert('You lost :(');
+            }, 500);
+          }
         }, 500);
-        // this.monsterAttack();
-        if (this.player.hp <= 0) gameState = 'lost';
       }
     },
-
-    heal: function (min = 5, max = 15) {
+    attack: function (min, max) {
+      var damage = this.getRndInteger(min, max);
+      this.monster.hp -= damage;
+      if (this.monster.hp < 0) this.monster.hp = 0;
+      this.addTurn(true, 'PLAYER HITS MONSTER FOR ' + damage);
+    },
+    monsterAttack: function (min, max) {
+      var damage = this.getRndInteger(min, max);
+      this.player.hp -= damage;
+      if (this.player.hp <= 0) this.player.hp = 0;
+      this.addTurn(false, 'MONSTER HITS PLAYER FOR ' + damage);
+    },
+    heal: function (min, max) {
       if (this.player.hp < this.player.maxHp) {
-        let amount = getRndInteger(min, max);
+        var amount = this.getRndInteger(min, max);
         this.player.hp += amount;
         if (this.player.hp > this.player.maxHp) this.player.hp = this.player.maxHp;
-        this.updateBattleLog(`PLAYER HEALS FOR ${amount}`, 'player');
+        this.addTurn(true, 'PLAYER HEALS FOR ' + amount);
       } else {
-        this.updateBattleLog(`PLAYER HEALS FOR 0`, 'player');
+        this.addTurn(true, 'PLAYER HEALS FOR 0');
       }
     },
-
-    attack: function (min = 1, max = 10) {
-      let amount = getRndInteger(min, max);
-      this.monster.hp -= amount;
-      if (this.monster.hp < 0) this.monster.hp = 0;
-      this.updateBattleLog(`PLAYER HITS MONSTER FOR ${amount}`, 'player');
+    giveUp: function () {
+      this.gameIsRunning = false;
     },
-
-    updateBattleLog: function (msg, subject) {
-      this.battleLog.push({ msg, subject });
-      setTimeout(this.scrollToEnd, 1);
+    addTurn: function (isPlayer, text) {
+      this.turns.unshift({ isPlayer, text });
     },
-
-    scrollToEnd: function () {
-      var container = this.$el.querySelector('#battle-log');
-      container.scrollTop = container.scrollHeight;
-    },
-
-    monsterAttack: function (min = 1, max = 10) {
-      let amount = getRndInteger(min, max);
-      this.player.hp -= amount;
-      if (this.player.hp <= 0) {
-        this.player.hp = 0;
-        this.gameState = 'lost';
-      }
-      this.updateBattleLog(`MONSTER HITS PLAYER FOR ${amount}`, 'monster');
-    },
-
-    reset: function () {
-      this.gameState = 'playing';
-      this.player.hp = 100;
-      this.monster.hp = 100;
-      this.battleLog = [];
+    /**
+     * Returns a random number between min and max (both included).
+     * @param {Number} min
+     * @param {Number} max
+     */
+    getRndInteger: function (min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
     }
   }
 });
